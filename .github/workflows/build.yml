@@ -9,7 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: registry.gitlab.com/hadzhioglu/padavan-ng
+    container:
+      image: registry.gitlab.com/hadzhioglu/padavan-ng
+      options: "--privileged"
     defaults: { run: { shell: bash } }
     steps:
     - uses: actions/checkout@v4
@@ -17,7 +19,8 @@ jobs:
     - name: Get variables
       run: |
         pwd
-        echo $BASH_VERSION
+        ls -la
+        ls -la /.dockerenv || :
         sed -i 's|\r$||g' variables build.config
         . <(cat variables build.config)
         PADAVAN_THEMES="${PADAVAN_THEMES[*]}"
