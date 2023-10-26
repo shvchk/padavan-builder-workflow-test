@@ -9,18 +9,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: registry.gitlab.com/hadzhioglu/padavan-ng
-      options: "--privileged"
+    container: registry.gitlab.com/hadzhioglu/padavan-ng
     defaults: { run: { shell: bash } }
     steps:
     - uses: actions/checkout@v4
 
     - name: Get variables
       run: |
-        pwd
         ls -la
-        ls -la /.dockerenv || :
         sed -i 's|\r$||g' variables build.config
         . <(cat variables build.config)
         PADAVAN_THEMES="${PADAVAN_THEMES[*]}"
@@ -30,6 +26,7 @@ jobs:
 
     - name: Download sources and toolchain
       run: |
+        git config --global --add safe.directory *
         git clone -b "$PADAVAN_BRANCH" "$PADAVAN_REPO"
         git checkout "$PADAVAN_COMMIT"
         wget -qO- "$PADAVAN_TOOLCHAIN_URL" | tar -C padavan-ng --zstd -xf -
