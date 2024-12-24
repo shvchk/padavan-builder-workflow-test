@@ -1,2 +1,9 @@
-sed -Ei '/#{60}/s/^/func_enable_busybox_param "CONFIG_NETCAT"\n/' padavan-ng/trunk/build_firmware.sh
-tail padavan-ng/trunk/build_firmware.sh
+busybox_cfg="padavan-ng/trunk/configs/boards/busybox.config"
+
+busybox_enable() {
+  sed -i "s/\# $1 is not set/$1=y/" $busybox_cfg
+}
+
+busybox_enable CONFIG_NC
+busybox_enable CONFIG_NC_EXTRA
+busybox_enable CONFIG_NC_110_COMPAT
